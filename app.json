@@ -17,7 +17,10 @@
       "adaptiveIcon": {
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.bigfontphone.app"
+      "package": "com.bigfontphone.app",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "plugins": [
       [
@@ -27,6 +30,11 @@
           "cameraPermission": "允许使用相机拍摄联系人照片"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "7c036461-073e-4891-9ea9-74cef8acd5bd"
+      }
+    }
   }
 }

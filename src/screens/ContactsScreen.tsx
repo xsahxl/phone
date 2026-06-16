@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
-  Dimensions,
 } from 'react-native';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -22,9 +21,6 @@ type RootStackParamList = {
   AddContact: { contact?: Contact };
   ContactDetail: { contact: Contact };
 };
-
-const { width: screenWidth } = Dimensions.get('window');
-const NUM_COLUMNS = 2;
 
 const ContactsScreen: React.FC = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -44,28 +40,49 @@ const ContactsScreen: React.FC = () => {
   };
 
   const handleContactPress = (contact: Contact) => {
-    // 直接拨打
+    // 点击直接拨打
+    makeCall(contact.phoneNumber);
+  };
+
+  const handleContactLongPress = (contact: Contact) => {
+    // 长按弹出菜单
     Alert.alert(
       contact.name || '联系人',
-      `拨打 ${contact.phoneNumber}？`,
+      '请选择操作',
       [
         { text: '取消', style: 'cancel' },
-        {
-          text: '拨打',
-          style: 'default',
-          onPress: () => makeCall(contact.phoneNumber),
-        },
         {
           text: '查看详情',
           onPress: () => navigation.navigate('ContactDetail', { contact }),
         },
+        {
+          text: '拨打电话',
+          style: 'default',
+          onPress: () => makeCall(contact.phoneNumber),
+        },
+        {
+          text: '删除联系人',
+          style: 'destructive',
+          onPress: () => {
+            Alert.alert(
+              '确认删除',
+              `确定要删除「${contact.name || '此联系人'}」吗？`,
+              [
+                { text: '取消', style: 'cancel' },
+                {
+                  text: '删除',
+                  style: 'destructive',
+                  onPress: async () => {
+                    await deleteContact(contact.id);
+                    await loadContacts();
+                  },
+                },
+              ],
+            );
+          },
+        },
       ],
     );
-  };
-
-  const handleContactLongPress = async (contact: Contact) => {
-    await deleteContact(contact.id);
-    await loadContacts();
   };
 
   const handleAddContact = () => {
@@ -103,22 +120,19 @@ const ContactsScreen: React.FC = () => {
             style={styles.emptyAddButton}
             onPress={handleAddContact}
           >
-            <Text style={styles.emptyAddButtonText}>添加第一个联系人</Text>
+            <Text style={styles.emptyAddButtonText} numberOfLines={1}>添加第一个联系人</Text>
           </TouchableOpacity>
         </View>
       ) : (
         <FlatList
           data={contacts}
           keyExtractor={item => item.id}
-          numColumns={NUM_COLUMNS}
           renderItem={({ item }) => (
-            <View style={{ width: (screenWidth - spacing.md * 3) / NUM_COLUMNS }}>
-              <ContactCard
-                contact={item}
-                onPress={handleContactPress}
-                onLongPress={handleContactLongPress}
-              />
-            </View>
+            <ContactCard
+              contact={item}
+              onPress={handleContactPress}
+              onLongPress={handleContactLongPress}
+            />
           )}
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
@@ -189,11 +203,12 @@ const styles = StyleSheet.create({
   },
   emptyAddButton: {
     backgroundColor: colors.primary,
-    paddingHorizontal: spacing.xxl,
+    paddingHorizontal: spacing.xl,
     paddingVertical: spacing.md,
     borderRadius: sizes.borderRadius,
     minHeight: sizes.buttonHeight,
     justifyContent: 'center',
+    alignSelf: 'stretch',
     elevation: 3,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },

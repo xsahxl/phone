@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text } from 'react-native';
+import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import ContactsScreen from './src/screens/ContactsScreen';
 import DialPadScreen from './src/screens/DialPadScreen';
@@ -32,10 +33,12 @@ export type TabParamList = {
 const Tab = createBottomTabNavigator<TabParamList>();
 
 const TabIcon: React.FC<{ label: string; focused: boolean }> = ({ label, focused }) => (
-  <Text style={{ fontSize: 28, opacity: focused ? 1 : 0.5 }}>{label}</Text>
+  <Text style={{ fontSize: 24, opacity: focused ? 1 : 0.5 }}>{label}</Text>
 );
 
 const MainTabs: React.FC = () => {
+  const insets = useSafeAreaInsets();
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -43,9 +46,9 @@ const MainTabs: React.FC = () => {
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textSecondary,
         tabBarStyle: {
-          height: 72,
-          paddingBottom: 8,
-          paddingTop: 8,
+          height: 64 + insets.bottom,
+          paddingBottom: insets.bottom,
+          paddingTop: 6,
           backgroundColor: colors.white,
           borderTopWidth: 1,
           borderTopColor: colors.border,
@@ -90,8 +93,9 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const App: React.FC = () => {
   return (
-    <FontSizeProvider>
-      <NavigationContainer>
+    <SafeAreaProvider>
+      <FontSizeProvider>
+        <NavigationContainer>
         <Stack.Navigator
           screenOptions={{
             headerStyle: {
@@ -132,8 +136,9 @@ const App: React.FC = () => {
             })}
           />
         </Stack.Navigator>
-      </NavigationContainer>
-    </FontSizeProvider>
+        </NavigationContainer>
+      </FontSizeProvider>
+    </SafeAreaProvider>
   );
 };
 
