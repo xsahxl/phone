@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "打电话",
+    "slug": "BigFontPhone",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#FFFFFF"
+    },
+    "ios": {
+      "supportsTablet": false
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#FFFFFF"
+      },
+      "package": "com.bigfontphone.app"
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "允许访问相册以设置联系人照片",
+          "cameraPermission": "允许使用相机拍摄联系人照片"
+        }
+      ]
+    ]
+  }
+}
