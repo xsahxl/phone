@@ -6,10 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "newArchEnabled": true,
-    "splash": {
-      "backgroundColor": "#FFFFFF"
-    },
     "ios": {
       "supportsTablet": false
     },
@@ -29,7 +25,8 @@
           "photosPermission": "允许访问相册以设置联系人照片",
           "cameraPermission": "允许使用相机拍摄联系人照片"
         }
-      ]
+      ],
+      "expo-font"
     ],
     "extra": {
       "eas": {
